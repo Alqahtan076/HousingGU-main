@@ -10,7 +10,7 @@
 	const router = useRouter();
 	const formUserName = ref("");
 	const formPassword = ref("");
-
+	const passwordFieldType = ref("password");
 	const formVisible = ref(false);
 	onMounted(() => {
 		formVisible.value = true;
@@ -64,6 +64,9 @@
 				return;
 			});
 	}
+	const togglePasswordVisibility = () => {
+		passwordFieldType.value = passwordFieldType.value === "password" ? "text" : "password";
+	};
 </script>
 
 <template>
@@ -79,7 +82,13 @@
 					</div>
 					<div class="mb-3">
 						<label for="password" class="form-label">Password</label>
-						<input type="password" class="form-control" id="password" placeholder="Enter your password" v-model="formPassword" />
+						<div class="input-group">
+							<input :type="passwordFieldType" class="form-control" id="password" placeholder="Enter your password" v-model="formPassword" />
+							<button class="btn btn-outline-secondary" type="button" @click="togglePasswordVisibility">
+								<span v-if="passwordFieldType === 'password'">Show</span>
+								<span v-else>Hide</span>
+							</button>
+						</div>
 					</div>
 					<button type="button" @click="login()" class="btn btn-primary">Login</button>
 					<div class="text-center mt-3">

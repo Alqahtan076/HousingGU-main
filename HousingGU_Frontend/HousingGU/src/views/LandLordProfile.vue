@@ -11,7 +11,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-8 mt-3">
+				<div class="col-md-8 mt-3 mb-2">
 					<div class="card flex-grow mb-3">
 						<div class="card-body">
 							<h5 class="card-title">About</h5>
@@ -55,7 +55,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="card mt-1">
+					<div class="card mt-1 mb-1">
 						<div class="card-body">
 							<h5 class="card-title">potential tenants Requests</h5>
 							<div class="friend-requests-container" style="max-height: 300px; overflow-y: auto">
@@ -155,7 +155,6 @@
 		</div>
 	</div>
 
-	<
 	<div class="modal fade" :class="{ show: editPostModalVisible, 'd-block': editPostModalVisible }" @click.self="editPostModalVisible = false" tabindex="-1" aria-labelledby="editPostModal" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -593,12 +592,15 @@
 </script>
 <style scoped>
 	.page-container {
-		height: 90vh;
+		height: 100vh;
 		background-color: rgba(213, 169, 248, 0.233);
 	}
 
 	.container-fluid {
 		margin-top: 4.7rem;
+		margin-bottom: 1rem;
+		max-height: 97vh;
+		overflow-y: scroll;
 	}
 
 	.overlay {
@@ -633,14 +635,17 @@
 
 	.friend-request-card {
 		display: flex;
-		padding: 15px;
+		padding: 0.9rem;
 		border: 1px solid #ccc;
 		border-radius: 8px;
 		margin-bottom: 15px;
 	}
-
+	.friends-card {
+		max-height: 20rem;
+		overflow-y: scroll;
+	}
 	.friend-request-image {
-		width: 6rem;
+		width: 5rem;
 		margin-right: 15px;
 		border-radius: 50%;
 	}
@@ -650,7 +655,7 @@
 	}
 
 	.friend-requests-container {
-		max-height: 300px;
+		max-height: 16rem;
 		overflow-y: auto;
 	}
 
@@ -695,9 +700,9 @@
 	}
 
 	.small-img {
-		width: 50px;
+		width: 2rem;
 		height: auto;
-		margin-top: 5px;
+		margin-top: 0.3rem;
 		cursor: pointer;
 	}
 </style>

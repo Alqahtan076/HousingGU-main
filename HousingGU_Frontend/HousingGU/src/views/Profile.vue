@@ -113,14 +113,6 @@
 								<input type="number" class="form-control" id="age" v-model="editedProfile.age" />
 							</div>
 							<div class="form-group">
-								<label for="nationality">Nationality</label>
-								<input type="text" class="form-control" id="nationality" v-model="editedProfile.nationality" />
-							</div>
-							<div class="form-group">
-								<label for="city">City</label>
-								<input type="text" class="form-control" id="city" v-model="editedProfile.city" />
-							</div>
-							<div class="form-group">
 								<label for="gender">Gender</label>
 								<select class="form-control" id="gender" v-model="editedProfile.gender">
 									<option value="Male">Male</option>
@@ -378,6 +370,8 @@
 		editedProfile.value.userName = userInfo.userName;
 		editedProfile.value.aboutMe = aboutMe.value;
 		editedProfile.value.age = age.value;
+		editedProfile.value.nationality = nationality.value;
+		editedProfile.value.city = city.value;
 		editedProfile.value.gender = gender.value;
 		editedProfile.value.photos = ["../assets/img/photo1.jpg", "../assets/img/photo2.jpg", "../assets/img/photo3.jpg"];
 		openEditOverlay();
@@ -477,6 +471,7 @@
 		await axios
 			.get("/user/myprofile/" + userInfo.userId, { withCredentials: true })
 			.then((response) => {
+				console.log(response.data);
 				const user = response.data.user;
 				aboutMe.value = user.aboutMe;
 				friends.value = response.data.chats;

@@ -29,7 +29,13 @@
 					</div>
 					<div class="mb-3">
 						<label for="password" class="form-label">Password</label>
-						<input type="password" class="form-control" id="password" placeholder="Enter your password" v-model="formPassword" @input="validatePassword" :class="{ 'is-invalid': !isPasswordValid }" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{:;'?/>.<,])(?=.*[a-zA-Z]).{8,12}" title="Password should contain at least one special character, one uppercase letter, one lowercase letter, and one number, and be 8-12 characters long" />
+						<div class="input-group">
+							<input :type="passwordFieldType" class="form-control" id="password" placeholder="Enter your password" v-model="formPassword" @input="validatePassword" :class="{ 'is-invalid': !isPasswordValid }" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{:;'?/>.<,])(?=.*[a-zA-Z]).{8,12}" title="Password should contain at least one special character, one uppercase letter, one lowercase letter, and one number, and be 8-12 characters long" />
+							<button class="btn btn-outline-secondary" type="button" @click="togglePasswordVisibility">
+								<span v-if="passwordFieldType === 'password'">Show</span>
+								<span v-else>Hide</span>
+							</button>
+						</div>
 						<div v-if="!isPasswordValid" class="invalid-feedback">Password should contain at least one special character, one uppercase letter, one lowercase letter, and one number, and be 8-12 characters long.</div>
 					</div>
 					<div class="mb-3" v-if="selectedUser === 'Roomie'">
@@ -85,7 +91,7 @@
 	import { toast } from "vue3-toastify";
 	import "vue3-toastify/dist/index.css";
 	import { useRouter, useRoute } from "vue-router";
-
+	const passwordFieldType = ref("password");
 	const route = useRoute();
 	const router = useRouter();
 	const formUserName = ref("");
@@ -239,6 +245,9 @@
 			isNationalityValid.value = true;
 		}
 	}
+	const togglePasswordVisibility = () => {
+		passwordFieldType.value = passwordFieldType.value === "password" ? "text" : "password";
+	};
 </script>
 
 <style scoped>

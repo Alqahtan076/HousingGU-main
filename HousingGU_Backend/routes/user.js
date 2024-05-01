@@ -206,12 +206,14 @@ user.get("/user/myprofile/:id", async (req, res) => {
 						profilePicture: true,
 						aboutMe: true,
 						username: true,
+						age: true,
 					},
 				});
 				getChat[i].user.id = MatchRequestTo.id;
 				getChat[i].user.profilePicture = MatchRequestTo.profilePicture;
 				getChat[i].user.aboutMe = MatchRequestTo.aboutMe;
 				getChat[i].user.username = MatchRequestTo.username;
+				getChat[i].user.age = MatchRequestTo.age;
 			}
 		}
 
@@ -355,7 +357,7 @@ user.post("/user/matchWithUser", async (req, res) => {
 					RequestedToName: requestedToUsername,
 				},
 			});
-			await createNotification("Match Request", "You have a match request pending from  " + matched.RequestedByName, matched.MatchRequestTo);
+			await createNotification("Request Received", "You have a request pending from  " + matched.RequestedByName, matched.MatchRequestTo);
 		} else {
 			matched = await prisma.matched.create({
 				data: {
@@ -399,7 +401,7 @@ user.post("/user/acceptMatchRequest", async (req, res) => {
 					},
 				},
 			});
-			await createNotification("Match Accepeted", "You'r match request have been accepeted by " + match.RequestedToName, match.MatchRequestedBy);
+			await createNotification("Request Accepeted", "You'r request have been accepeted by " + match.RequestedToName, match.MatchRequestedBy);
 			res.status(201).json({ success: true, message: request.name + " have been added as a friend" });
 		} else {
 			res.status(201).json({ success: false, message: request.name + " not authorized to add this friend!" });
@@ -423,7 +425,7 @@ user.post("/user/rejectMatchRequest", async (req, res) => {
 					ApprovedRequest: false,
 				},
 			});
-			await createNotification("Match Rejection", "You'r match request have been rejected by " + match.RequestedToName, match.MatchRequestedBy);
+			await createNotification("Request Rejected", "You'r request have been rejected by " + match.RequestedToName, match.MatchRequestedBy);
 			res.status(201).json({ success: true, message: request.name + " have been ignored" });
 		} else {
 			res.status(201).json({ success: false, message: request.name + " not authorized to ignore!" });

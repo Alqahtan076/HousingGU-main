@@ -85,7 +85,7 @@
 			</nav>
 		</div>
 	</div>
-	<div class="overlay" v-if="showAddPostModal">
+	<div class="overlay" v-if="showAddPostModal == true">
 		<div class="overlay-content">
 			<h2>Add New Post</h2>
 			<form>
@@ -103,17 +103,17 @@
 					<input type="text" class="form-control" id="location" v-model="newPost.location" />
 				</div>
 				<div class="form-group">
-					<label for="price">Price per month</label>
+					<label for="price">Price</label>
 					<input type="text" class="form-control" id="price" v-model="newPost.price" />
 				</div>
 				<div class="form-group">
-					<label for="photo1">Photo:</label>
-					<input type="file" id="photo1" accept="image/*" @change="handleFileUpload" />
+					<label for="photos">Photos:</label>
+					<input type="file" id="photos" accept="image/*" multiple @change="handleMultipleFileUpload" />
 				</div>
 
 				<div class="overlay-buttons">
 					<button type="button" class="btn btn-secondary" @click="showAddPostModal = false">Cancel</button>
-					<button type="button" class="btn btn-primary" @click="savePost">Save Post</button>
+					<button type="button" class="btn btn-primary" @click="savePost()">Save Post</button>
 				</div>
 			</form>
 		</div>
@@ -156,7 +156,7 @@
 		fullDescription: "",
 		location: "",
 		price: "",
-		image: null,
+		images: [],
 	});
 	const fetchPosts = async () => {
 		try {
@@ -222,9 +222,14 @@
 		}
 	};
 
-	function handleFileUpload(event) {
-		const file = event.target.files[0];
-		newPost.value.image = file;
+	function handleMultipleFileUpload(event) {
+		const files = event.target.files;
+
+		newPost.value.images = [];
+
+		for (let i = 0; i < files.length; i++) {
+			newPost.value.images.push(files[i]);
+		}
 	}
 	async function savePost() {
 		const formData = new FormData();
@@ -232,42 +237,53 @@
 		formData.append("fullDescription", newPost.value.fullDescription);
 		formData.append("location", newPost.value.location);
 		formData.append("price", newPost.value.price);
-		formData.append("photo", newPost.value.image);
-
-		try {
-			const response = await axios
-				.post("/user/createApartmentPost", formData, {
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				})
-				.then(function (response) {
-					toast.success("Post Created successfully", {
-						position: toast.POSITION.BOTTOM_RIGHT,
-						theme: "colored",
+		// Append each image file to the formData
+		for (let i = 0; i < newPost.value.images.length; i++) {
+			formData.append("photos", newPost.value.images[i]);
+		}
+		const price = parseInt(newPost.value.price);
+		if (isNaN(price) || price !== parseFloat(newPost.value.price)) {
+			toast.error("Price must be an integer", {
+				position: toast.POSITION.BOTTOM_RIGHT,
+				theme: "colored",
+			});
+			return;
+		} else {
+			try {
+				const response = await axios
+					.post("/user/createApartmentPost", formData, {
+						headers: {
+							"Content-Type": "multipart/form-data",
+						},
+					})
+					.then(function (response) {
+						toast.success("Post Created successfully", {
+							position: toast.POSITION.BOTTOM_RIGHT,
+							theme: "colored",
+						});
+						setTimeout(() => {
+							showAddPostModal.value = false;
+						}, 1500);
+					})
+					.catch(function (error) {
+						if (error.response.data.errors !== undefined) {
+							toast.error(handleErrors(error.response.data.errors), {
+								position: toast.POSITION.BOTTOM_RIGHT,
+								theme: "colored",
+								duration: 5000,
+							});
+						} else {
+							toast.error(error.response.data.errorMessage, {
+								position: toast.POSITION.BOTTOM_RIGHT,
+								theme: "colored",
+								duration: 5000,
+							});
+						}
 					});
-					setTimeout(() => {
-						showAddPostModal.value = false;
-					}, 1500);
-				})
-				.catch(function (error) {
-					if (error.response.data.errors !== undefined) {
-						toast.error(handleErrors(error.response.data.errors), {
-							position: toast.POSITION.BOTTOM_RIGHT,
-							theme: "colored",
-							duration: 5000,
-						});
-					} else {
-						toast.error(error.response.data.errorMessage, {
-							position: toast.POSITION.BOTTOM_RIGHT,
-							theme: "colored",
-							duration: 5000,
-						});
-					}
-				});
-		} catch (error) {
-			console.error(error);
-			// Handle the error
+			} catch (error) {
+				console.error(error);
+				// Handle the error
+			}
 		}
 	}
 

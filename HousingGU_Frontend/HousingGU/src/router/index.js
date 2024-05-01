@@ -15,7 +15,6 @@ const router = createRouter({
 		{
 			path: "/:catchAll(.*)",
 			name: "landingPage",
-			meta: { guest: true },
 			component: LandingPage,
 		},
 		{

@@ -286,7 +286,7 @@ landlord.post("/user/createMatchRequest", async (req, res) => {
 				RejectedRequest: false,
 			},
 		});
-		await createNotification("Match Request", "You have a match request pending from  " + newMatchRequest.RequestedByName, newMatchRequest.MatchRequestTo);
+		await createNotification("Request", "You have a request pending from  " + newMatchRequest.RequestedByName, newMatchRequest.MatchRequestTo);
 		res.status(201).json({ message: "Match request created successfully", matchRequest: newMatchRequest });
 	} catch (error) {
 		console.error("Error creating match request:", error);
